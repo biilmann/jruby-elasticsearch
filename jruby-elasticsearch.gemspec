@@ -1,23 +1,22 @@
-Gem::Specification.new do |spec|
-  files = []
-  dirs = %w{lib examples etc patterns test}
-  dirs.each do |dir|
-    files += Dir["#{dir}/**/*"]
-  end
+# -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
+require "jruby-elasticsearch/version"
 
-  spec.name = "jruby-elasticsearch"
-  spec.version = "0.0.10"
-  spec.summary = "JRuby API for ElasticSearch using the native ES Java API"
-  spec.description = "..."
-  spec.license = "Apache License (2.0)"
+Gem::Specification.new do |s|
+  s.name        = "jruby-elasticsearch"
+  s.version     = ElasticSearch::VERSION
+  s.authors     = ["Jordan Sissel", "Mathias Biilmann"]
+  s.email       = ["jls@semicomplete.com"]
+  s.homepage    = "https://github.com/jordansissel/jruby-elasticsearch"
+  s.summary     = "JRuby API for ElasticSearch using the native ES Java API"
+  s.description = "..."
 
-  spec.files = files
-  spec.require_paths << "lib"
-  #spec.bindir = "bin"
-  #spec.executables << "..."
-
-  spec.authors = ["Jordan Sissel"]
-  spec.email = ["jls@semicomplete.com"]
-  spec.homepage = "https://github.com/jordansissel/jruby-elasticsearch"
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.require_paths = ["lib"]
+  
+  s.add_development_dependency "jruby-elasticsearch_jars"
+  s.add_development_dependency "json"
+  
+  s.platform = "java"
 end
-

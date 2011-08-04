@@ -2,12 +2,10 @@ require "jruby-elasticsearch/namespace"
 require "jruby-elasticsearch/request"
 
 class ElasticSearch::SearchRequest < ElasticSearch::Request
-  begin
-    QueryStringQueryBuilder = org.elasticsearch.index.query.xcontent.QueryStringQueryBuilder
-  rescue NameError
-    # The 'xcontent' namespace was removed in elasticsearch 0.17.0
-    QueryStringQueryBuilder = org.elasticsearch.index.query.QueryStringQueryBuilder
-  end
+  attr_reader :prep
+
+  QueryStringQueryBuilder = org.elasticsearch.index.query.QueryStringQueryBuilder
+  TermFilterBuilder = org.elasticsearch.index.query.TermFilterBuilder
 
   # Create a new index request.
   public
@@ -84,6 +82,16 @@ class ElasticSearch::SearchRequest < ElasticSearch::Request
     @prep.setQuery(qbuilder)
     return self
   end # def query
+
+  def filter(filter_name, filters)
+    case filter_name.to_sym
+    when :term
+      filter = TermFilterBuilder.new(filters.keys.first.to_s, filters.values.first)
+    else
+      raise "Unknown filter '#{filter_name}'"
+    end
+    @prep.setFilter(filter)
+  end
 
   # Add a histogram facet to this query. Can be invoked multiple times.
   public
