@@ -30,10 +30,12 @@ class ElasticSearch::Client
     else
       # Use unicast discovery a host is given
       if !options[:host].nil?
-        port = (options[:port] or "9300")
+        host = options[:host].is_a? Array ? options[:host] : [options[:host]]
+        port = options[:port] || 9300
         builder.settings.put("discovery.zen.ping.multicast.enabled", false)
-        builder.settings.put("discovery.zen.ping.unicast.hosts", "#{options[:host]}:#{port}")
-        #builder.settings.put("es.transport.tcp.port", port)
+        builder.settings.put("discovery.zen.ping.unicast.hosts", host.map { |h| 
+          h + (port.is_a? Array ? "[#{port.first}-#{port.last}]" : ":#{port}")
+        })
       end
 
       if options[:bind_host]
