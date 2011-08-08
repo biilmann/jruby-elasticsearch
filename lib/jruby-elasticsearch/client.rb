@@ -33,9 +33,12 @@ class ElasticSearch::Client
         host = options[:host].is_a?(Array) ? options[:host] : [options[:host]]
         port = options[:port] || 9300
         builder.settings.put("discovery.zen.ping.multicast.enabled", false)
+        puts "Settings hosts to #{host.map { |h| 
+          "#{h}#{(port.is_a?(Array) ? "[#{port.first}-#{port.last}]" : ":#{port}")}"
+        }.join(",")}"
         builder.settings.put("discovery.zen.ping.unicast.hosts", host.map { |h| 
-          h + (port.is_a?(Array) ? "[#{port.first}-#{port.last}]" : ":#{port}")
-        }.to_java)
+          "#{h}#{(port.is_a?(Array) ? "[#{port.first}-#{port.last}]" : ":#{port}")}"
+        }.join(","))
       end
 
       if options[:bind_host]
