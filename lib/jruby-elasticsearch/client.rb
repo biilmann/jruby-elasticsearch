@@ -35,7 +35,7 @@ class ElasticSearch::Client
         builder.settings.put("discovery.zen.ping.multicast.enabled", false)
         builder.settings.put("discovery.zen.ping.unicast.hosts", host.map { |h| 
           h + (port.is_a?(Array) ? "[#{port.first}-#{port.last}]" : ":#{port}")
-        })
+        }.to_java)
       end
 
       if options[:bind_host]
