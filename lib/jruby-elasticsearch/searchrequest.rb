@@ -108,6 +108,19 @@ class ElasticSearch::SearchRequest < ElasticSearch::Request
     return self
   end # def histogram
 
+  # Add a date histogram facet to this query. Can be invoked multiple times.
+  public
+  def date_histogram(field, interval, name=nil)
+    if name.nil?
+      name = "#{field}_#{interval}"
+    end
+    builder = org.elasticsearch.search.facet.datehistogram.DateHistogramFacetBuilder.new(name)
+    builder.field(field)
+    builder.interval(interval)
+    @prep.addFacet(builder)
+    return self
+  end
+
   public
   def terms(field, name=nil)
     if name.nil?
